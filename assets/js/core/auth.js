@@ -1,13 +1,13 @@
 
-// Verificar sesión al cargar la página (excepto en login.php)
-if (!window.location.pathname.endsWith('/login.php')) {
+// Verificar sesión al cargar la página (excepto en index.php)
+if (!window.location.pathname.endsWith('/index.php')) {
     $.ajax({
         url: 'controllers/check_session.php',
         type: 'GET',
         success: function(response) {
             var data = JSON.parse(response);
             if (!data.isLoggedIn) {
-                window.location.href = 'login.php';
+                window.location.href = 'index.php';
             } else {
                 let tobase = btoa(JSON.stringify(data))
                 let userData = sessionStorage.getItem("info")
@@ -31,7 +31,7 @@ $(document).ready(function() {
             success: function(response) {
                 // Limpiar localStorage
                 sessionStorage.removeItem('info');
-                window.location.href = 'login.php';
+                window.location.href = 'index.php';
             }
         });
     });

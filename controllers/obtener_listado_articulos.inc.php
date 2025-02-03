@@ -10,22 +10,24 @@ function validate_int_param($param, $default = 0) {
 
 // Función para obtener el total de registros sin filtros
 function get_total_records($pdo, $table, $user_id) {
-    $query = "SELECT COUNT(*) FROM $table WHERE user_id = :user_id";
+    $query = "SELECT COUNT(*) FROM $table WHERE user_id = :user_id AND status != :status";
     $stmt = $pdo->prepare($query);
     $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':status', 'eliminado', PDO::PARAM_STR); // Excluir 'eliminado'
     $stmt->execute();
     return $stmt->fetchColumn();
 }
 
 // Función para obtener el total de registros con filtros
 function get_filtered_records($pdo, $table, $search, $category, $user_id) {
-    $query = "SELECT COUNT(*) FROM $table WHERE title LIKE :search AND user_id = :user_id";
+    $query = "SELECT COUNT(*) FROM $table WHERE title LIKE :search AND user_id = :user_id AND status != :status";
     if ($category) {
         $query .= " AND category_id = :category";
     }
     $stmt = $pdo->prepare($query);
     $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
     $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':status', 'eliminado', PDO::PARAM_STR); // Excluir 'eliminado'
     if ($category) {
         $stmt->bindValue(':category', $category, PDO::PARAM_INT);
     }
@@ -35,7 +37,7 @@ function get_filtered_records($pdo, $table, $search, $category, $user_id) {
 
 // Función para obtener los datos paginados con ordenamiento
 function get_posts($pdo, $table, $start, $length, $search, $category, $order_by, $order_dir, $user_id) {
-    $query = "SELECT post_id, title, DATE(created_at) AS created_at_formatted, preview, status FROM $table WHERE title LIKE :search AND user_id = :user_id";
+    $query = "SELECT post_id, title, DATE(created_at) AS created_at_formatted, preview, status FROM $table WHERE title LIKE :search AND user_id = :user_id AND status != :status";
 
     if ($category) {
         $query .= " AND category_id = :category";
@@ -47,6 +49,7 @@ function get_posts($pdo, $table, $start, $length, $search, $category, $order_by,
     $stmt = $pdo->prepare($query);
     $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
     $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':status', 'eliminado', PDO::PARAM_STR); // Excluir 'eliminado'
     if ($category) {
         $stmt->bindValue(':category', $category, PDO::PARAM_INT);
     }
@@ -102,3 +105,4 @@ try {
     error_log("Database error: " . $e->getMessage());
     echo json_encode(["error" => "An error occurred, please try again later."]);
 }
+?>

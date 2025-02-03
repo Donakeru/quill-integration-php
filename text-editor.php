@@ -100,9 +100,9 @@
                   <div class="row">
                     <div class="">
                       <div class="form-group">
-                        <button class="btn btn-success" id="submit-btn"></button>
+                        <button type="submit" class="btn btn-success" id="submit-btn"></button>
                         <!-- Botón de eliminar artículo -->
-                        <button class="btn btn-danger" id="delete-btn" style="display: none;">Eliminar Artículo</button>
+                        <button type="button" class="btn btn-danger" id="delete-btn" style="display: none;">Eliminar Artículo</button>
                       </div>
                     </div>
                   </div>
